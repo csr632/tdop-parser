@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`scanner 1`] = `
+exports[`scan js like syntax 1`] = `
 [
   "import",
   "{",
@@ -16,5 +16,21 @@ exports[`scanner 1`] = `
   "=",
   "1234",
   ";",
+]
+`;
+
+exports[`scan math like syntax 1`] = `
+[
+  "1",
+  "+",
+  "2",
+  "*",
+  "3",
+  "-",
+  "(",
+  "4",
+  "/",
+  "2",
+  ")",
 ]
 `;

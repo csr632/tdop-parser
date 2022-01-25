@@ -1,4 +1,9 @@
-export function createScanner(text: string) {
+export interface Scanner {
+  peek(): string | null;
+  consume(): string | null;
+}
+
+export function createScanner(text: string): Scanner {
   const iterator = text[Symbol.iterator]();
   let next = iterator.next();
   let peeked = false;
