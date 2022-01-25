@@ -1,0 +1,20 @@
+// Vitest Snapshot v1
+
+exports[`scanner 1`] = `
+[
+  "import",
+  "{",
+  "defineConfig",
+  "}",
+  "from",
+  "'",
+  "vite",
+  "'",
+  ";",
+  "let",
+  "test",
+  "=",
+  "1234",
+  ";",
+]
+`;

@@ -1,0 +1,18 @@
+{
+  "name": "demo-lang",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.5",
+    "vite": "^2.7.13",
+    "vitest": "^0.2.3"
+  }
+}
