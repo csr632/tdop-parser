@@ -21,6 +21,7 @@ exports[`scan js like syntax 1`] = `
 
 exports[`scan math like syntax 1`] = `
 [
+  "-",
   "1",
   "+",
   "2",

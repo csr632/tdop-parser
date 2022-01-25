@@ -1,0 +1,32 @@
+// Vitest Snapshot v1
+
+exports[`parse -1+2*3+5 1`] = `
+{
+  "left": {
+    "left": {
+      "body": {
+        "type": "value",
+        "value": "1",
+      },
+      "type": "prefix-",
+    },
+    "right": {
+      "left": {
+        "type": "value",
+        "value": "2",
+      },
+      "right": {
+        "type": "value",
+        "value": "3",
+      },
+      "type": "infix*",
+    },
+    "type": "infix+",
+  },
+  "right": {
+    "type": "value",
+    "value": "5",
+  },
+  "type": "infix+",
+}
+`;
