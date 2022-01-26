@@ -85,3 +85,4 @@ registerInfixOperator("+", 10);
 registerInfixOperator("-", 10);
 registerInfixOperator("*", 20);
 registerInfixOperator("/", 20);
+registerInfixOperator("^", 30, true);

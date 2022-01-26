@@ -37,3 +37,45 @@ exports[`parse -1+2*3+5 1`] = `
   "type": "infix+",
 }
 `;
+
+exports[`parse 1 + 2^3^4*5-6 1`] = `
+{
+  "left": {
+    "left": {
+      "type": "value",
+      "value": "1",
+    },
+    "right": {
+      "left": {
+        "left": {
+          "type": "value",
+          "value": "2",
+        },
+        "right": {
+          "left": {
+            "type": "value",
+            "value": "3",
+          },
+          "right": {
+            "type": "value",
+            "value": "4",
+          },
+          "type": "infix^",
+        },
+        "type": "infix^",
+      },
+      "right": {
+        "type": "value",
+        "value": "5",
+      },
+      "type": "infix*",
+    },
+    "type": "infix+",
+  },
+  "right": {
+    "type": "value",
+    "value": "6",
+  },
+  "type": "infix-",
+}
+`;
