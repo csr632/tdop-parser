@@ -1,32 +1,35 @@
 export interface Scanner {
-  peek(): string | null;
+  peek(index?: number): string | null;
   consume(): string | null;
 }
 
 export function createScanner(text: string): Scanner {
   const iterator = text[Symbol.iterator]();
   let next = iterator.next();
-  let peeked = false;
-  let token: string | null = null;
+  let peeked: string[] = [];
 
   return {
-    peek(): string | null {
-      if (!peeked) token = scanNextToken();
-      peeked = true;
-      return token;
-    },
-    consume(): string | null {
-      if (peeked) {
-        peeked = false;
-        return token;
-      }
-      token = scanNextToken();
-      return token;
-    },
+    peek,
+    consume,
   };
 
+  function peek(index: number = 0): string | null {
+    while (peeked.length <= index) {
+      const nextToken = scanNextToken();
+      if (!nextToken) break; // EOF
+      peeked.push(nextToken);
+    }
+    return peeked[index] || null;
+  }
+
+  function consume(): string | null {
+    const token = peek();
+    if (token) peeked.shift();
+    return token;
+  }
+
   function scanNextToken(): string | null {
-    // skip WhiteSpace at front
+    // skip white space at front
     while (!next.done && isWhiteSpace(next.value)) {
       next = iterator.next();
     }
