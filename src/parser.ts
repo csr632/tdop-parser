@@ -1,87 +1,87 @@
 import type { Scanner } from "./scanner";
 
 export function createParser(scanner: Scanner) {
-  function parse(precedence: number): any {
-    let nudToken = scanner.consume();
-    if (!nudToken) throw new Error();
+  const parser = {
+    parseExp,
+  };
 
-    const nud = nuds[nudToken] ?? nuds.__default;
-    let left = nud.handle(nudToken);
+  function parseExp(ctxPrecedence: number): any {
+    let prefixToken = scanner.consume();
+    if (!prefixToken) throw new Error();
 
-    let ledToken = scanner.peek();
-    while (ledToken) {
-      const led = leds[ledToken];
-      if (!led) throw new Error(ledToken);
-      if (led.precedence <= precedence) break;
+    const prefixParselet =
+      prefixParselets[prefixToken] ?? prefixParselets.__default;
+    let left = prefixParselet.handle(prefixToken, parser);
+
+    let infixToken = scanner.peek();
+    while (infixToken) {
+      const infixParselet = infixParselets[infixToken];
+      if (!infixParselet) throw new Error(infixToken);
+      if (infixParselet.precedence <= ctxPrecedence) break;
       scanner.consume();
-      left = led.handle(ledToken, left);
-      ledToken = scanner.peek();
+      left = infixParselet.handle(left, infixToken, parser);
+      infixToken = scanner.peek();
     }
-
     return left;
   }
 
-  const nuds = {
-    __default: {
-      handle(token) {
-        return {
-          type: "value",
-          value: token,
-        };
-      },
-    },
-    "+": {
-      precedence: 10,
-      handle() {
-        const body = parse(10);
-        if (!body) throw new Error("invalid");
-        return {
-          type: "prefix+",
-          body,
-        };
-      },
-    },
-    "-": {
-      precedence: 10,
-      handle() {
-        const body = parse(10);
-        if (!body) throw new Error("invalid");
-        return {
-          type: "prefix-",
-          body,
-        };
-      },
-    },
-  };
-
-  const leds = {
-    "+": {
-      precedence: 1,
-      handle(token, left) {
-        const right = parse(1);
-        if (!right) throw new Error("invalid");
-        return {
-          type: "infix+",
-          left,
-          right,
-        };
-      },
-    },
-    "*": {
-      precedence: 10,
-      handle(token, left) {
-        const right = parse(10);
-        if (!right) throw new Error("invalid");
-        return {
-          type: "infix*",
-          left,
-          right,
-        };
-      },
-    },
-  };
-
-  return () => {
-    return parse(0);
+  return function parse() {
+    return parseExp(0);
   };
 }
+
+interface PrefixParseLet {
+  handle(token: string, parser: any): any;
+}
+const prefixParselets: Record<string, PrefixParseLet> = {
+  __default: {
+    handle(token, parser) {
+      return {
+        type: "value",
+        value: token,
+      };
+    },
+  },
+};
+function registerPrefixOperator(prefix: string, precedence: number) {
+  prefixParselets[prefix] = {
+    handle(token, { parseExp }) {
+      const body = parseExp(precedence);
+      if (!body) throw new Error(`invalid prefix usage "${prefix}"`);
+      return {
+        type: `prefix${prefix}`,
+        body,
+      };
+    },
+  };
+}
+registerPrefixOperator("+", 50);
+registerPrefixOperator("-", 50);
+
+interface InfixParseLet {
+  handle(left: any, token: string, parser: any): any;
+  precedence: number;
+}
+const infixParselets: Record<string, InfixParseLet> = {};
+function registerInfixOperator(
+  infix: string,
+  precedence: number,
+  associateRight2Left: boolean = false
+) {
+  infixParselets[infix] = {
+    precedence,
+    handle(left, token, { parseExp }) {
+      const right = parseExp(associateRight2Left ? precedence - 1 : precedence);
+      if (!right) throw new Error(`invalid infix usage "${infix}"`);
+      return {
+        type: `infix${infix}`,
+        left,
+        right,
+      };
+    },
+  };
+}
+registerInfixOperator("+", 10);
+registerInfixOperator("-", 10);
+registerInfixOperator("*", 20);
+registerInfixOperator("/", 20);

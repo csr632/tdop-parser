@@ -12,14 +12,21 @@ exports[`parse -1+2*3+5 1`] = `
     },
     "right": {
       "left": {
-        "type": "value",
-        "value": "2",
+        "left": {
+          "type": "value",
+          "value": "2",
+        },
+        "right": {
+          "type": "value",
+          "value": "6",
+        },
+        "type": "infix*",
       },
       "right": {
         "type": "value",
         "value": "3",
       },
-      "type": "infix*",
+      "type": "infix/",
     },
     "type": "infix+",
   },
