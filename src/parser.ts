@@ -9,18 +9,20 @@ export function createParser(scanner: Scanner) {
     let prefixToken = scanner.consume();
     if (!prefixToken) throw new Error();
 
+    // because our scanner is so naive,
+    // we treat all non-operator tokens as values (numbers and names)
     const prefixParselet =
-      prefixParselets[prefixToken] ?? prefixParselets.__default;
+      prefixParselets[prefixToken] ?? prefixParselets.__value;
     let left = prefixParselet.handle(prefixToken, parser);
 
-    let infixToken = scanner.peek();
-    while (infixToken) {
+    while (true) {
+      const infixToken = scanner.peek();
+      if (!infixToken) break;
       const infixParselet = infixParselets[infixToken];
       if (!infixParselet) throw new Error(infixToken);
       if (infixParselet.precedence <= ctxPrecedence) break;
       scanner.consume();
       left = infixParselet.handle(left, infixToken, parser);
-      infixToken = scanner.peek();
     }
     return left;
   }
@@ -34,7 +36,7 @@ interface PrefixParseLet {
   handle(token: string, parser: any): any;
 }
 const prefixParselets: Record<string, PrefixParseLet> = {
-  __default: {
+  __value: {
     handle(token, parser) {
       return {
         type: "value",

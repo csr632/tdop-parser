@@ -1,3 +1,11 @@
+/**
+ * This file implement a very naive scanner,
+ * which just split the input string by word.
+ * 
+ * In a more serious scanner, tokens should be classified
+ * into token types.
+ */
+
 export interface Scanner {
   peek(index?: number): string | null;
   consume(): string | null;
