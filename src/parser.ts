@@ -43,7 +43,13 @@ const prefixParselets: Record<string, PrefixParseLet> = {
     },
   },
 };
-function registerPrefixOperator(prefix: string, precedence: number) {
+interface InfixParseLet {
+  handle(left: any, token: string, parser: any): any;
+  precedence: number;
+}
+const infixParselets: Record<string, InfixParseLet> = {};
+
+function helpCreatePrefixOperator(prefix: string, precedence: number) {
   prefixParselets[prefix] = {
     handle(token, { parseExp }) {
       const body = parseExp(precedence);
@@ -55,15 +61,8 @@ function registerPrefixOperator(prefix: string, precedence: number) {
     },
   };
 }
-registerPrefixOperator("+", 50);
-registerPrefixOperator("-", 50);
 
-interface InfixParseLet {
-  handle(left: any, token: string, parser: any): any;
-  precedence: number;
-}
-const infixParselets: Record<string, InfixParseLet> = {};
-function registerInfixOperator(
+function helpCreateInfixOperator(
   infix: string,
   precedence: number,
   associateRight2Left: boolean = false
@@ -81,8 +80,12 @@ function registerInfixOperator(
     },
   };
 }
-registerInfixOperator("+", 10);
-registerInfixOperator("-", 10);
-registerInfixOperator("*", 20);
-registerInfixOperator("/", 20);
-registerInfixOperator("^", 30, true);
+
+helpCreatePrefixOperator("+", 50);
+helpCreatePrefixOperator("-", 50);
+
+helpCreateInfixOperator("+", 10);
+helpCreateInfixOperator("-", 10);
+helpCreateInfixOperator("*", 20);
+helpCreateInfixOperator("/", 20);
+helpCreateInfixOperator("^", 30, true);
