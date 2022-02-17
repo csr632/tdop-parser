@@ -15,6 +15,25 @@ test("parse 1 + 2^3^4*5-6", () => {
   // console.log(JSON.stringify(res, null, 2))
 });
 
+test("parse true ? 1 : 2", () => {
+  const parser = createParser(createScanner("true ? 1 : 2"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
+test("parse 1+ 2  *3 ? 1+1 : 2  -1", () => {
+  const parser = createParser(createScanner("1+ 2  *3 ? 1+1 : 2  -1"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
+test("parse true ? 1 ; 2", () => {
+  expect(() => {
+    const parser = createParser(createScanner("true ? 1 ; 2"));
+    parser.parseProgram();
+  }).toThrowError("expect token : but got ;");
+});
+
 test("parse 1 + ", () => {
   expect(() => {
     const parser = createParser(createScanner("1 + "));
@@ -23,8 +42,7 @@ test("parse 1 + ", () => {
 });
 
 test("parse 1 2", () => {
-  expect(() => {
-    const parser = createParser(createScanner("1 2"));
-    parser.parseProgram();
-  }).toThrowError("expect infixToken but found 2");
+  const parser = createParser(createScanner("1 2"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
 });

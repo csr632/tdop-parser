@@ -1,10 +1,14 @@
-export type Node = Value | UnaryOperationNode | BinaryOperationNode;
+export type Node =
+  | Value
+  | UnaryOperationNode
+  | BinaryOperationNode
+  | ConditionalOperationNode;
 
-export interface BinaryOperationNode {
-  type: "binary";
-  operator: string;
-  left: Node;
-  right: Node;
+// this naive parser
+// don't distinguish between string and number and boolean
+export interface Value {
+  type: "value";
+  value: string;
 }
 
 export interface UnaryOperationNode {
@@ -13,9 +17,16 @@ export interface UnaryOperationNode {
   right: Node;
 }
 
-// this naive parser
-// don't distinguish between string and number and boolean
-export interface Value {
-  type: "value";
-  value: string;
+export interface BinaryOperationNode {
+  type: "binary";
+  operator: string;
+  left: Node;
+  right: Node;
+}
+
+export interface ConditionalOperationNode {
+  type: "conditional";
+  condition: Node;
+  trueBranch: Node;
+  falseBranch: Node;
 }

@@ -89,3 +89,78 @@ exports[`parse 1 + 2^3^4*5-6 1`] = `
   "type": "binary",
 }
 `;
+
+exports[`parse 1 2 1`] = `
+{
+  "type": "value",
+  "value": "1",
+}
+`;
+
+exports[`parse 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
+{
+  "condition": {
+    "left": {
+      "type": "value",
+      "value": "1",
+    },
+    "operator": "+",
+    "right": {
+      "left": {
+        "type": "value",
+        "value": "2",
+      },
+      "operator": "*",
+      "right": {
+        "type": "value",
+        "value": "3",
+      },
+      "type": "binary",
+    },
+    "type": "binary",
+  },
+  "falseBranch": {
+    "left": {
+      "type": "value",
+      "value": "2",
+    },
+    "operator": "-",
+    "right": {
+      "type": "value",
+      "value": "1",
+    },
+    "type": "binary",
+  },
+  "trueBranch": {
+    "left": {
+      "type": "value",
+      "value": "1",
+    },
+    "operator": "+",
+    "right": {
+      "type": "value",
+      "value": "1",
+    },
+    "type": "binary",
+  },
+  "type": "conditional",
+}
+`;
+
+exports[`parse true ? 1 : 2 1`] = `
+{
+  "condition": {
+    "type": "value",
+    "value": "true",
+  },
+  "falseBranch": {
+    "type": "value",
+    "value": "2",
+  },
+  "trueBranch": {
+    "type": "value",
+    "value": "1",
+  },
+  "type": "conditional",
+}
+`;

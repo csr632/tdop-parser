@@ -2,10 +2,13 @@ import type { Node } from "./ast";
 import { prefixParselets, infixParselets } from "./parselet";
 import type { Scanner } from "./scanner";
 
+// TODO: support parentheses
+
 export function createParser(scanner: Scanner): Parser {
   const parser: Parser = {
     parseProgram,
     parseExp,
+    scanner,
   };
   return parser;
 
@@ -29,8 +32,7 @@ export function createParser(scanner: Scanner): Parser {
       const infixToken = scanner.peek();
       if (!infixToken) break;
       const infixParselet = infixParselets[infixToken];
-      if (!infixParselet)
-        throw new Error(`expect infixToken but found ${infixToken}`);
+      if (!infixParselet) break;
       if (infixParselet.precedence <= ctxPrecedence) break;
       scanner.consume();
       left = infixParselet.handle(left, infixToken, parser);
@@ -42,4 +44,5 @@ export function createParser(scanner: Scanner): Parser {
 export interface Parser {
   parseProgram(): Node;
   parseExp(ctxPrecedence: number): Node;
+  scanner: Scanner;
 }
