@@ -3,9 +3,10 @@
 This is a "Top Down Operator Precedence" parser (Pratt parsing) implemented in TypeScript.
 
 ```sh
-npm run tsc
-npm run test
-npm run coverage
+pnpm install
+pnpm run tsc
+pnpm run test
+pnpm run coverage
 ```
 
 References:
