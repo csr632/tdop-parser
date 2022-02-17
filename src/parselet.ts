@@ -65,7 +65,7 @@ function helpCreateInfixOperator(
 }
 
 // use operator precedence of JavaScript
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#operator_precedence
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
 
 helpCreatePrefixOperator("+", 50);
 helpCreatePrefixOperator("-", 50);
