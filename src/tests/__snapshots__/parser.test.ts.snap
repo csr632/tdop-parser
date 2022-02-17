@@ -1,40 +1,45 @@
 // Vitest Snapshot v1
 
-exports[`parse -1+2*3+5 1`] = `
+exports[`parse -1+2*6/3+5 1`] = `
 {
   "left": {
     "left": {
-      "body": {
+      "operator": "-",
+      "right": {
         "type": "value",
         "value": "1",
       },
-      "type": "prefix-",
+      "type": "unary",
     },
+    "operator": "+",
     "right": {
       "left": {
         "left": {
           "type": "value",
           "value": "2",
         },
+        "operator": "*",
         "right": {
           "type": "value",
           "value": "6",
         },
-        "type": "infix*",
+        "type": "binary",
       },
+      "operator": "/",
       "right": {
         "type": "value",
         "value": "3",
       },
-      "type": "infix/",
+      "type": "binary",
     },
-    "type": "infix+",
+    "type": "binary",
   },
+  "operator": "+",
   "right": {
     "type": "value",
     "value": "5",
   },
-  "type": "infix+",
+  "type": "binary",
 }
 `;
 
@@ -45,37 +50,42 @@ exports[`parse 1 + 2^3^4*5-6 1`] = `
       "type": "value",
       "value": "1",
     },
+    "operator": "+",
     "right": {
       "left": {
         "left": {
           "type": "value",
           "value": "2",
         },
+        "operator": "^",
         "right": {
           "left": {
             "type": "value",
             "value": "3",
           },
+          "operator": "^",
           "right": {
             "type": "value",
             "value": "4",
           },
-          "type": "infix^",
+          "type": "binary",
         },
-        "type": "infix^",
+        "type": "binary",
       },
+      "operator": "*",
       "right": {
         "type": "value",
         "value": "5",
       },
-      "type": "infix*",
+      "type": "binary",
     },
-    "type": "infix+",
+    "type": "binary",
   },
+  "operator": "-",
   "right": {
     "type": "value",
     "value": "6",
   },
-  "type": "infix-",
+  "type": "binary",
 }
 `;

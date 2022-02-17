@@ -1,34 +1,45 @@
+import type { Node } from "./ast";
 import { prefixParselets, infixParselets } from "./parselet";
 import type { Scanner } from "./scanner";
 
-export function createParser(scanner: Scanner) {
-  const parser = {
+export function createParser(scanner: Scanner): Parser {
+  const parser: Parser = {
+    parseProgram,
     parseExp,
   };
+  return parser;
 
-  function parseExp(ctxPrecedence: number): any {
+  // for this naive parser,
+  // a program is just one expression
+  function parseProgram() {
+    return parseExp(0);
+  }
+
+  function parseExp(ctxPrecedence: number): Node {
     let prefixToken = scanner.consume();
-    if (!prefixToken) throw new Error();
+    if (!prefixToken) throw new Error(`expect token but found none`);
 
     // because our scanner is so naive,
     // we treat all non-operator tokens as value (.e.g number)
     const prefixParselet =
       prefixParselets[prefixToken] ?? prefixParselets.__value;
-    let left = prefixParselet.handle(prefixToken, parser);
+    let left: Node = prefixParselet.handle(prefixToken, parser);
 
     while (true) {
       const infixToken = scanner.peek();
       if (!infixToken) break;
       const infixParselet = infixParselets[infixToken];
-      if (!infixParselet) throw new Error(infixToken);
+      if (!infixParselet)
+        throw new Error(`expect infixToken but found ${infixToken}`);
       if (infixParselet.precedence <= ctxPrecedence) break;
       scanner.consume();
       left = infixParselet.handle(left, infixToken, parser);
     }
     return left;
   }
+}
 
-  return function parse() {
-    return parseExp(0);
-  };
+export interface Parser {
+  parseProgram(): Node;
+  parseExp(ctxPrecedence: number): Node;
 }

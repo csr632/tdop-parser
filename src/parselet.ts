@@ -1,8 +1,10 @@
+import type { Value, UnaryOperationNode, BinaryOperationNode, Node } from "./ast";
+
 interface PrefixParseLet {
-  handle(token: string, parser: any): any;
+  handle(token: string, parser: any): Value | UnaryOperationNode;
 }
 interface InfixParseLet {
-  handle(left: any, token: string, parser: any): any;
+  handle(left: Node, token: string, parser: any): BinaryOperationNode;
   precedence: number;
 }
 
@@ -23,10 +25,10 @@ function helpCreatePrefixOperator(prefix: string, precedence: number) {
   prefixParselets[prefix] = {
     handle(token, { parseExp }) {
       const body = parseExp(precedence);
-      if (!body) throw new Error(`invalid prefix usage "${prefix}"`);
       return {
-        type: `prefix${prefix}`,
-        body,
+        type: "unary",
+        operator: prefix,
+        right: body,
       };
     },
   };
@@ -41,9 +43,9 @@ function helpCreateInfixOperator(
     precedence,
     handle(left, token, { parseExp }) {
       const right = parseExp(associateRight2Left ? precedence - 1 : precedence);
-      if (!right) throw new Error(`invalid infix usage "${infix}"`);
       return {
-        type: `infix${infix}`,
+        type: "binary",
+        operator: infix,
         left,
         right,
       };
