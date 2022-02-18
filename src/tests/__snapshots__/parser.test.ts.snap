@@ -1,5 +1,20 @@
 // Vitest Snapshot v1
 
+exports[`parse ((1))+1 1`] = `
+{
+  "left": {
+    "type": "value",
+    "value": "1",
+  },
+  "operator": "+",
+  "right": {
+    "type": "value",
+    "value": "1",
+  },
+  "type": "binary",
+}
+`;
+
 exports[`parse -1+2*6/3+5 1`] = `
 {
   "left": {
@@ -144,6 +159,68 @@ exports[`parse 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
     "type": "binary",
   },
   "type": "conditional",
+}
+`;
+
+exports[`parse 2*(3-1) 1`] = `
+{
+  "left": {
+    "type": "value",
+    "value": "2",
+  },
+  "operator": "*",
+  "right": {
+    "left": {
+      "type": "value",
+      "value": "3",
+    },
+    "operator": "-",
+    "right": {
+      "type": "value",
+      "value": "1",
+    },
+    "type": "binary",
+  },
+  "type": "binary",
+}
+`;
+
+exports[`parse 2*(9*(((2))+1))-1 1`] = `
+{
+  "left": {
+    "left": {
+      "type": "value",
+      "value": "2",
+    },
+    "operator": "*",
+    "right": {
+      "left": {
+        "type": "value",
+        "value": "9",
+      },
+      "operator": "*",
+      "right": {
+        "left": {
+          "type": "value",
+          "value": "2",
+        },
+        "operator": "+",
+        "right": {
+          "type": "value",
+          "value": "1",
+        },
+        "type": "binary",
+      },
+      "type": "binary",
+    },
+    "type": "binary",
+  },
+  "operator": "-",
+  "right": {
+    "type": "value",
+    "value": "1",
+  },
+  "type": "binary",
 }
 `;
 

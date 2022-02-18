@@ -8,14 +8,10 @@ import type {
 import type { Parser } from "./parser";
 
 interface PrefixParseLet {
-  handle(token: string, parser: Parser): Value | UnaryOperationNode;
+  handle(token: string, parser: Parser): Node;
 }
 interface InfixParseLet {
-  handle(
-    left: Node,
-    token: string,
-    parser: Parser
-  ): BinaryOperationNode | ConditionalOperationNode;
+  handle(left: Node, token: string, parser: Parser): Node;
   precedence: number;
 }
 
@@ -69,34 +65,45 @@ function helpCreateInfixOperator(
 
 helpCreatePrefixOperator("+", 150);
 helpCreatePrefixOperator("-", 150);
+createParenthesis();
 
 helpCreateInfixOperator("+", 120);
 helpCreateInfixOperator("-", 120);
 helpCreateInfixOperator("*", 130);
 helpCreateInfixOperator("/", 130);
 helpCreateInfixOperator("^", 140, true);
+createConditionalOperater();
 
-// Conditional operater is a special "infix operator"
-infixParselets["?"] = {
-  // the binding power between condition node and "?"
-  precedence: 30,
-  handle(left, token, { parseExp, scanner }): ConditionalOperationNode {
-    // the binding power to true/false branch is smallest
-    // (parse expression as long as possible)
-    const trueBranch = parseExp(0);
+/**
+ * Conditional operater is a special "infix"
+ */
+function createConditionalOperater() {
+  infixParselets["?"] = {
+    // the binding power between condition node and "?"
+    precedence: 30,
+    handle(left, token, { parseExp, scanner }): ConditionalOperationNode {
+      // the binding power to true/false branch is smallest
+      // (parse expression as long as possible)
+      const trueBranch = parseExp(0);
+      scanner.consume(":");
+      const falseBranch = parseExp(0);
 
-    const nextToken = scanner.peek();
-    if (nextToken !== ":")
-      throw new Error(`expect token : but got ${nextToken}`);
-    scanner.consume();
+      return {
+        type: "conditional",
+        condition: left,
+        trueBranch,
+        falseBranch,
+      };
+    },
+  };
+}
 
-    const falseBranch = parseExp(0);
-
-    return {
-      type: "conditional",
-      condition: left,
-      trueBranch,
-      falseBranch,
-    };
-  },
-};
+function createParenthesis() {
+  prefixParselets["("] = {
+    handle(token, { parseExp, scanner }) {
+      const content = parseExp(0);
+      scanner.consume(")");
+      return content;
+    },
+  };
+}

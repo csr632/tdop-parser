@@ -58,3 +58,28 @@ test("parse 1 2", () => {
   const res = parser.parseProgram();
   expect(res).toMatchSnapshot();
 });
+
+test("parse 2*(3-1)", () => {
+  const parser = createParser(createScanner("2*(3-1)"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
+test("parse ((1))+1", () => {
+  const parser = createParser(createScanner("((1))+1"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
+test("parse 2*(9*(((2))+1))-1", () => {
+  const parser = createParser(createScanner("2*(9*(((2))+1))-1"));
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
+test("parse 2*(3 1)", () => {
+  expect(() => {
+    const parser = createParser(createScanner("2*(3 1)"));
+    parser.parseProgram();
+  }).toThrowError("expect token ) but got 1");
+});

@@ -8,7 +8,7 @@
 
 export interface Scanner {
   peek(index?: number): string | null;
-  consume(): string | null;
+  consume(expect?: string): string | null;
 }
 
 export function createScanner(text: string): Scanner {
@@ -30,8 +30,10 @@ export function createScanner(text: string): Scanner {
     return peeked[index] || null;
   }
 
-  function consume(): string | null {
+  function consume(expect?: string): string | null {
     const token = peek();
+    if (expect && token !== expect)
+      throw new Error(`expect token ${expect} but got ${token}`);
     if (token) peeked.shift();
     return token;
   }

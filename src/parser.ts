@@ -2,8 +2,6 @@ import type { Node } from "./ast";
 import { prefixParselets, infixParselets } from "./parselet";
 import type { Scanner } from "./scanner";
 
-// TODO: support parentheses
-
 export function createParser(scanner: Scanner): Parser {
   const parser: Parser = {
     parseProgram,
