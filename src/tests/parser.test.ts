@@ -38,6 +38,19 @@ test("parse conditional chains", () => {
   const res = parser.parseProgram();
   expect(res).toMatchSnapshot();
 });
+test("parse conditional chains", () => {
+  const parser = createParser(
+    createScanner(`
+  condition1
+    ? condition2 ? true2 : false2
+    : condition3
+      ? condition4 ? true4 : false4
+      : condition5 ? true5 : false5
+  `)
+  );
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
 
 test("parse true ? 1 ; 2", () => {
   expect(() => {

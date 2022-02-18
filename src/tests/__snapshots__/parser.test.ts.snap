@@ -264,6 +264,68 @@ exports[`parse conditional chains 1`] = `
 }
 `;
 
+exports[`parse conditional chains 2`] = `
+{
+  "condition": {
+    "type": "value",
+    "value": "condition1",
+  },
+  "falseBranch": {
+    "condition": {
+      "type": "value",
+      "value": "condition3",
+    },
+    "falseBranch": {
+      "condition": {
+        "type": "value",
+        "value": "condition5",
+      },
+      "falseBranch": {
+        "type": "value",
+        "value": "false5",
+      },
+      "trueBranch": {
+        "type": "value",
+        "value": "true5",
+      },
+      "type": "conditional",
+    },
+    "trueBranch": {
+      "condition": {
+        "type": "value",
+        "value": "condition4",
+      },
+      "falseBranch": {
+        "type": "value",
+        "value": "false4",
+      },
+      "trueBranch": {
+        "type": "value",
+        "value": "true4",
+      },
+      "type": "conditional",
+    },
+    "type": "conditional",
+  },
+  "trueBranch": {
+    "condition": {
+      "type": "value",
+      "value": "condition2",
+    },
+    "falseBranch": {
+      "type": "value",
+      "value": "false2",
+    },
+    "trueBranch": {
+      "type": "value",
+      "value": "true2",
+    },
+    "type": "conditional",
+  },
+  "type": "conditional",
+}
+`;
+
 exports[`parse true ? 1 : 2 1`] = `
 {
   "condition": {
