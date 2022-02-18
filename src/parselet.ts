@@ -67,21 +67,19 @@ function helpCreateInfixOperator(
 // use operator precedence of JavaScript
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
 
-helpCreatePrefixOperator("+", 50);
-helpCreatePrefixOperator("-", 50);
+helpCreatePrefixOperator("+", 150);
+helpCreatePrefixOperator("-", 150);
 
-helpCreateInfixOperator("+", 10);
-helpCreateInfixOperator("-", 10);
-helpCreateInfixOperator("*", 20);
-helpCreateInfixOperator("/", 20);
-helpCreateInfixOperator("^", 30, true);
+helpCreateInfixOperator("+", 120);
+helpCreateInfixOperator("-", 120);
+helpCreateInfixOperator("*", 130);
+helpCreateInfixOperator("/", 130);
+helpCreateInfixOperator("^", 140, true);
 
-// TODO: ensure conditional chains support
 // Conditional operater is a special "infix operator"
 infixParselets["?"] = {
   // the binding power between condition node and "?"
-  // is very small, but bigger than assignment
-  precedence: 5,
+  precedence: 30,
   handle(left, token, { parseExp, scanner }): ConditionalOperationNode {
     // the binding power to true/false branch is smallest
     // (parse expression as long as possible)
