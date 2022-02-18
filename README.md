@@ -13,3 +13,4 @@ References:
 
 - https://engineering.desmos.com/articles/pratt-parser/
 - http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/
+- https://youtu.be/Nlqv6NtBXcA?t=1257
