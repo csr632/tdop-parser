@@ -27,6 +27,18 @@ test("parse 1+ 2  *3 ? 1+1 : 2  -1", () => {
   expect(res).toMatchSnapshot();
 });
 
+test("parse conditional chains", () => {
+  const parser = createParser(
+    createScanner(`
+  condition1 ? value1
+  : condition2 ? value2
+  : condition3 ? value3
+  : value4`)
+  );
+  const res = parser.parseProgram();
+  expect(res).toMatchSnapshot();
+});
+
 test("parse true ? 1 ; 2", () => {
   expect(() => {
     const parser = createParser(createScanner("true ? 1 ; 2"));

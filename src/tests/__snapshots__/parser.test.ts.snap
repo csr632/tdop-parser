@@ -147,6 +147,46 @@ exports[`parse 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
 }
 `;
 
+exports[`parse conditional chains 1`] = `
+{
+  "condition": {
+    "type": "value",
+    "value": "condition1",
+  },
+  "falseBranch": {
+    "condition": {
+      "type": "value",
+      "value": "condition2",
+    },
+    "falseBranch": {
+      "condition": {
+        "type": "value",
+        "value": "condition3",
+      },
+      "falseBranch": {
+        "type": "value",
+        "value": "value4",
+      },
+      "trueBranch": {
+        "type": "value",
+        "value": "value3",
+      },
+      "type": "conditional",
+    },
+    "trueBranch": {
+      "type": "value",
+      "value": "value2",
+    },
+    "type": "conditional",
+  },
+  "trueBranch": {
+    "type": "value",
+    "value": "value1",
+  },
+  "type": "conditional",
+}
+`;
+
 exports[`parse true ? 1 : 2 1`] = `
 {
   "condition": {
