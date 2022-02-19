@@ -1,21 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`parse ((1))+1 1`] = `
-{
-  "left": {
-    "type": "value",
-    "value": "1",
-  },
-  "operator": "+",
-  "right": {
-    "type": "value",
-    "value": "1",
-  },
-  "type": "binary",
-}
-`;
-
-exports[`parse -1+2*6/3+5 1`] = `
+exports[`basic > -1+2*6/3+5 1`] = `
 {
   "left": {
     "left": {
@@ -58,7 +43,7 @@ exports[`parse -1+2*6/3+5 1`] = `
 }
 `;
 
-exports[`parse 1 + 2^3^4*5-6 1`] = `
+exports[`basic > 1 + 2^3^4*5-6 1`] = `
 {
   "left": {
     "left": {
@@ -105,14 +90,7 @@ exports[`parse 1 + 2^3^4*5-6 1`] = `
 }
 `;
 
-exports[`parse 1 2 1`] = `
-{
-  "type": "value",
-  "value": "1",
-}
-`;
-
-exports[`parse 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
+exports[`conditional operation > 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
 {
   "condition": {
     "left": {
@@ -162,69 +140,7 @@ exports[`parse 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
 }
 `;
 
-exports[`parse 2*(3-1) 1`] = `
-{
-  "left": {
-    "type": "value",
-    "value": "2",
-  },
-  "operator": "*",
-  "right": {
-    "left": {
-      "type": "value",
-      "value": "3",
-    },
-    "operator": "-",
-    "right": {
-      "type": "value",
-      "value": "1",
-    },
-    "type": "binary",
-  },
-  "type": "binary",
-}
-`;
-
-exports[`parse 2*(9*(((2))+1))-1 1`] = `
-{
-  "left": {
-    "left": {
-      "type": "value",
-      "value": "2",
-    },
-    "operator": "*",
-    "right": {
-      "left": {
-        "type": "value",
-        "value": "9",
-      },
-      "operator": "*",
-      "right": {
-        "left": {
-          "type": "value",
-          "value": "2",
-        },
-        "operator": "+",
-        "right": {
-          "type": "value",
-          "value": "1",
-        },
-        "type": "binary",
-      },
-      "type": "binary",
-    },
-    "type": "binary",
-  },
-  "operator": "-",
-  "right": {
-    "type": "value",
-    "value": "1",
-  },
-  "type": "binary",
-}
-`;
-
-exports[`parse conditional chains 1`] = `
+exports[`conditional operation > conditional chains 1`] = `
 {
   "condition": {
     "type": "value",
@@ -264,7 +180,7 @@ exports[`parse conditional chains 1`] = `
 }
 `;
 
-exports[`parse conditional chains 2`] = `
+exports[`conditional operation > conditional chains 2`] = `
 {
   "condition": {
     "type": "value",
@@ -326,7 +242,7 @@ exports[`parse conditional chains 2`] = `
 }
 `;
 
-exports[`parse true ? 1 : 2 1`] = `
+exports[`conditional operation > true ? 1 : 2 1`] = `
 {
   "condition": {
     "type": "value",
@@ -341,5 +257,89 @@ exports[`parse true ? 1 : 2 1`] = `
     "value": "1",
   },
   "type": "conditional",
+}
+`;
+
+exports[`error handling > 1 2 1`] = `
+{
+  "type": "value",
+  "value": "1",
+}
+`;
+
+exports[`parenthesis > ((1))+1 1`] = `
+{
+  "left": {
+    "type": "value",
+    "value": "1",
+  },
+  "operator": "+",
+  "right": {
+    "type": "value",
+    "value": "1",
+  },
+  "type": "binary",
+}
+`;
+
+exports[`parenthesis > 2*(3-1) 1`] = `
+{
+  "left": {
+    "type": "value",
+    "value": "2",
+  },
+  "operator": "*",
+  "right": {
+    "left": {
+      "type": "value",
+      "value": "3",
+    },
+    "operator": "-",
+    "right": {
+      "type": "value",
+      "value": "1",
+    },
+    "type": "binary",
+  },
+  "type": "binary",
+}
+`;
+
+exports[`parenthesis > 2*(9*(((2))+1))-1 1`] = `
+{
+  "left": {
+    "left": {
+      "type": "value",
+      "value": "2",
+    },
+    "operator": "*",
+    "right": {
+      "left": {
+        "type": "value",
+        "value": "9",
+      },
+      "operator": "*",
+      "right": {
+        "left": {
+          "type": "value",
+          "value": "2",
+        },
+        "operator": "+",
+        "right": {
+          "type": "value",
+          "value": "1",
+        },
+        "type": "binary",
+      },
+      "type": "binary",
+    },
+    "type": "binary",
+  },
+  "operator": "-",
+  "right": {
+    "type": "value",
+    "value": "1",
+  },
+  "type": "binary",
 }
 `;
