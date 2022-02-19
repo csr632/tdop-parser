@@ -1,4 +1,4 @@
-import type { Node, ConditionalOperationNode } from "./ast";
+import type { Node, ConditionalOperationNode, FunctionCallNode } from "./ast";
 import type { Parser } from "./parser";
 
 interface PrefixParseLet {
@@ -35,6 +35,7 @@ helpCreateInfixOperator("*", 130);
 helpCreateInfixOperator("/", 130);
 helpCreateInfixOperator("^", 140, true);
 registerConditionalOperater();
+registerFunctionCall();
 
 function helpCreatePrefixOperator(prefix: string, precedence: number) {
   prefixParselets[prefix] = {
@@ -98,6 +99,27 @@ function registerParenthesis() {
       const content = parseExp(0);
       scanner.consume(")");
       return content;
+    },
+  };
+}
+
+function registerFunctionCall() {
+  infixParselets["("] = {
+    precedence: 180,
+    handle(left, token, { parseExp, scanner }): FunctionCallNode {
+      const args: Node[] = [];
+      while (scanner.peek() !== ")") {
+        // has arguments
+        args.push(parseExp(0));
+        if (scanner.peek() !== ",") break;
+        scanner.consume(",");
+      }
+      scanner.consume(")");
+      return {
+        type: "fnCall",
+        function: left,
+        args,
+      };
     },
   };
 }

@@ -104,3 +104,33 @@ describe("parenthesis", () => {
     }).toThrowError("expect token ) but got 1");
   });
 });
+
+describe("function call", () => {
+  test("fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,)", () => {
+    const parser = createParser(
+      createScanner("fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,)")
+    );
+    const res = parser.parseProgram();
+    expect(res).toMatchSnapshot();
+  });
+
+  test("nested", () => {
+    const parser = createParser(
+      createScanner("fn1(fn2(arg2), arg1)(fn3(fn4(arg4), arg3))")
+    );
+    const res = parser.parseProgram();
+    expect(res).toMatchSnapshot();
+  });
+  test("error", () => {
+    expect(() => {
+      const parser = createParser(createScanner("fn1(arg1 arg2)"));
+      const res = parser.parseProgram();
+    }).toThrowErrorMatchingInlineSnapshot('"expect token ) but got arg2"');
+  });
+  test("error", () => {
+    expect(() => {
+      const parser = createParser(createScanner("fn1(arg1"));
+      const res = parser.parseProgram();
+    }).toThrowErrorMatchingInlineSnapshot('"expect token ) but got null"');
+  });
+});

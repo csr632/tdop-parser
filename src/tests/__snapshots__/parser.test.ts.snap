@@ -267,6 +267,120 @@ exports[`error handling > 1 2 1`] = `
 }
 `;
 
+exports[`function call > fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,) 1`] = `
+{
+  "left": {
+    "left": {
+      "args": [
+        {
+          "type": "value",
+          "value": "arg1",
+        },
+      ],
+      "function": {
+        "type": "value",
+        "value": "fn1",
+      },
+      "type": "fnCall",
+    },
+    "operator": "+",
+    "right": {
+      "args": [
+        {
+          "type": "value",
+          "value": "arg1",
+        },
+        {
+          "type": "value",
+          "value": "arg2",
+        },
+      ],
+      "function": {
+        "type": "value",
+        "value": "fn2",
+      },
+      "type": "fnCall",
+    },
+    "type": "binary",
+  },
+  "operator": "+",
+  "right": {
+    "args": [
+      {
+        "type": "value",
+        "value": "arg1",
+      },
+    ],
+    "function": {
+      "type": "value",
+      "value": "fn3",
+    },
+    "type": "fnCall",
+  },
+  "type": "binary",
+}
+`;
+
+exports[`function call > nested 1`] = `
+{
+  "args": [
+    {
+      "args": [
+        {
+          "args": [
+            {
+              "type": "value",
+              "value": "arg4",
+            },
+          ],
+          "function": {
+            "type": "value",
+            "value": "fn4",
+          },
+          "type": "fnCall",
+        },
+        {
+          "type": "value",
+          "value": "arg3",
+        },
+      ],
+      "function": {
+        "type": "value",
+        "value": "fn3",
+      },
+      "type": "fnCall",
+    },
+  ],
+  "function": {
+    "args": [
+      {
+        "args": [
+          {
+            "type": "value",
+            "value": "arg2",
+          },
+        ],
+        "function": {
+          "type": "value",
+          "value": "fn2",
+        },
+        "type": "fnCall",
+      },
+      {
+        "type": "value",
+        "value": "arg1",
+      },
+    ],
+    "function": {
+      "type": "value",
+      "value": "fn1",
+    },
+    "type": "fnCall",
+  },
+  "type": "fnCall",
+}
+`;
+
 exports[`parenthesis > ((1))+1 1`] = `
 {
   "left": {

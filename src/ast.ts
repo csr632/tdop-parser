@@ -2,7 +2,8 @@ export type Node =
   | Value
   | UnaryOperationNode
   | BinaryOperationNode
-  | ConditionalOperationNode;
+  | ConditionalOperationNode
+  | FunctionCallNode;
 
 // this naive parser
 // don't distinguish between string and number and boolean
@@ -29,4 +30,10 @@ export interface ConditionalOperationNode {
   condition: Node;
   trueBranch: Node;
   falseBranch: Node;
+}
+
+export interface FunctionCallNode {
+  type: "fnCall";
+  function: Node;
+  args: Node[];
 }
