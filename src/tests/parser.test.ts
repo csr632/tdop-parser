@@ -106,6 +106,12 @@ describe("parenthesis", () => {
 });
 
 describe("function call", () => {
+  test("fn1()", () => {
+    const parser = createParser(createScanner("fn1()"));
+    const res = parser.parseProgram();
+    expect(res).toMatchSnapshot();
+  });
+
   test("fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,)", () => {
     const parser = createParser(
       createScanner("fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,)")
@@ -121,12 +127,14 @@ describe("function call", () => {
     const res = parser.parseProgram();
     expect(res).toMatchSnapshot();
   });
+
   test("error", () => {
     expect(() => {
       const parser = createParser(createScanner("fn1(arg1 arg2)"));
       const res = parser.parseProgram();
     }).toThrowErrorMatchingInlineSnapshot('"expect token ) but got arg2"');
   });
+
   test("error", () => {
     expect(() => {
       const parser = createParser(createScanner("fn1(arg1"));

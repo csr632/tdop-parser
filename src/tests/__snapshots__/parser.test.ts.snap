@@ -267,6 +267,17 @@ exports[`error handling > 1 2 1`] = `
 }
 `;
 
+exports[`function call > fn1() 1`] = `
+{
+  "args": [],
+  "function": {
+    "type": "value",
+    "value": "fn1",
+  },
+  "type": "fnCall",
+}
+`;
+
 exports[`function call > fn1(arg1) + fn2(arg1, arg2) + fn3(arg1,) 1`] = `
 {
   "left": {
