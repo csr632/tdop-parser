@@ -1,10 +1,4 @@
-import type {
-  Value,
-  UnaryOperationNode,
-  BinaryOperationNode,
-  Node,
-  ConditionalOperationNode,
-} from "./ast";
+import type { Node, ConditionalOperationNode } from "./ast";
 import type { Parser } from "./parser";
 
 interface PrefixParseLet {
@@ -27,6 +21,20 @@ export const prefixParselets: Record<string, PrefixParseLet> = {
 };
 
 export const infixParselets: Record<string, InfixParseLet> = {};
+
+// use operator precedence of JavaScript
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
+
+helpCreatePrefixOperator("+", 150);
+helpCreatePrefixOperator("-", 150);
+registerParenthesis();
+
+helpCreateInfixOperator("+", 120);
+helpCreateInfixOperator("-", 120);
+helpCreateInfixOperator("*", 130);
+helpCreateInfixOperator("/", 130);
+helpCreateInfixOperator("^", 140, true);
+registerConditionalOperater();
 
 function helpCreatePrefixOperator(prefix: string, precedence: number) {
   prefixParselets[prefix] = {
@@ -60,24 +68,10 @@ function helpCreateInfixOperator(
   };
 }
 
-// use operator precedence of JavaScript
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
-
-helpCreatePrefixOperator("+", 150);
-helpCreatePrefixOperator("-", 150);
-createParenthesis();
-
-helpCreateInfixOperator("+", 120);
-helpCreateInfixOperator("-", 120);
-helpCreateInfixOperator("*", 130);
-helpCreateInfixOperator("/", 130);
-helpCreateInfixOperator("^", 140, true);
-createConditionalOperater();
-
 /**
  * Conditional operater is a special "infix"
  */
-function createConditionalOperater() {
+function registerConditionalOperater() {
   infixParselets["?"] = {
     // the binding power between condition node and "?"
     precedence: 30,
@@ -98,7 +92,7 @@ function createConditionalOperater() {
   };
 }
 
-function createParenthesis() {
+function registerParenthesis() {
   prefixParselets["("] = {
     handle(token, { parseExp, scanner }) {
       const content = parseExp(0);
