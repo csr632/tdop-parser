@@ -15,6 +15,12 @@ describe("basic", () => {
     expect(res).toMatchSnapshot();
     // console.log(JSON.stringify(res, null, 2))
   });
+
+  test("prefix nesting", () => {
+    const parser = createParser(createScanner("+-1-+-+2"));
+    const res = parser.parseProgram();
+    expect(res).toMatchSnapshot();
+  });
 });
 
 describe("conditional operation", () => {

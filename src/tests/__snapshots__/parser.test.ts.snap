@@ -90,6 +90,41 @@ exports[`basic > 1 + 2^3^4*5-6 1`] = `
 }
 `;
 
+exports[`basic > prefix nesting 1`] = `
+{
+  "left": {
+    "operator": "+",
+    "right": {
+      "operator": "-",
+      "right": {
+        "type": "value",
+        "value": "1",
+      },
+      "type": "unary",
+    },
+    "type": "unary",
+  },
+  "operator": "-",
+  "right": {
+    "operator": "+",
+    "right": {
+      "operator": "-",
+      "right": {
+        "operator": "+",
+        "right": {
+          "type": "value",
+          "value": "2",
+        },
+        "type": "unary",
+      },
+      "type": "unary",
+    },
+    "type": "unary",
+  },
+  "type": "binary",
+}
+`;
+
 exports[`conditional operation > 1+ 2  *3 ? 1+1 : 2  -1 1`] = `
 {
   "condition": {
