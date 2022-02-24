@@ -1,3 +1,4 @@
+#! https://zhuanlan.zhihu.com/p/471075848
 # 手写一个Parser - 代码简单而功能强大的Pratt Parsing
 
 在编译的流程中，一个很重要的步骤是语法分析（又称解析，Parsing）。解析器（Parser）负责将Token流转化为抽象语法树（AST）。这篇文章介绍一种Parser的实现算法：Pratt Parsing，又称Top Down Operator Precedence Parsing，并[用TypeScript来实现它](https://github.com/csr632/tdop-parser)。
@@ -83,32 +84,32 @@ Pratt Parsing将token分成2种：
 Pratt Parsing算法的核心实现就是[parseExp函数](https://github.com/csr632/tdop-parser/blob/23754a4a1eb15cb40de0cfd5a31fb1a43a55a87c/src/parser.ts#L19)：
 
 ```ts
-function parseExp(ctxPrecedence: number): Node {
-  let prefixToken = scanner.consume();
-  if (!prefixToken) throw new Error(`expect token but found none`);
-
-  // because our scanner is so naive,
-  // we treat all non-operator tokens as value (.e.g number)
-  const prefixParselet =
-    prefixParselets[prefixToken] ?? prefixParselets.__value;
-  let left: Node = prefixParselet.handle(prefixToken, parser);
-
-  while (true) {
-    const infixToken = scanner.peek();
-    if (!infixToken) break;
-    const infixParselet = infixParselets[infixToken];
-    if (!infixParselet) break;
-    if (infixParselet.precedence <= ctxPrecedence) break;
-    scanner.consume();
-    left = infixParselet.handle(left, infixToken, parser);
-  }
-  return left;
-}
+/*  1 */ function parseExp(ctxPrecedence: number): Node {
+/*  2 */   let prefixToken = scanner.consume();
+/*  3 */   if (!prefixToken) throw new Error(`expect token but found none`);
+/*  4 */ 
+/*  5 */   // because our scanner is so naive,
+/*  6 */   // we treat all non-operator tokens as value (.e.g number)
+/*  7 */   const prefixParselet =
+/*  8 */     prefixParselets[prefixToken] ?? prefixParselets.__value;
+/*  9 */   let left: Node = prefixParselet.handle(prefixToken, parser);
+/* 10 */
+/* 11 */   while (true) {
+/* 12 */     const infixToken = scanner.peek();
+/* 13 */     if (!infixToken) break;
+/* 14 */     const infixParselet = infixParselets[infixToken];
+/* 15 */     if (!infixParselet) break;
+/* 16 */     if (infixParselet.precedence <= ctxPrecedence) break;
+/* 17 */     scanner.consume();
+/* 18 */     left = infixParselet.handle(left, infixToken, parser);
+/* 19 */   }
+/* 20 */   return left;
+/* 21 */ }
 ```
 
 下面我们逐行讲解这个算法的工作原理。
 
-#### 2~10行
+#### 2~10行：解析prefix
 
 首先，这个方法会从token流**吃掉**一个token。这个token**必定**是一个prefix （比如遇到`-`要将它理解为prefix）。
 
@@ -116,7 +117,7 @@ function parseExp(ctxPrecedence: number): Node {
 
 在第7行，我们找到这个prefix对应的表达式构建器（prefixParselet），并调用它。prefixParselet的作用是，构建出以这个prefix为中心的表达式节点。
 
-我们先假设简单的情况，假设第一个token是`123`。它会触发默认的prefixParselet(`prefixParselets.__value`)，直接返回一个value节点：
+我们先假设简单的情况，假设第一个token是`123`。它会触发[默认的prefixParselet](https://github.com/csr632/tdop-parser/blob/9ae9c8c4c18126f3ae046da8131dc213c8d839c2/src/parselet.ts#L13)(`prefixParselets.__value`)，直接返回一个value节点：
 
 ```ts
 {
@@ -142,15 +143,16 @@ prefixParselets["-"] = {
 };
 ```
 
-它会递归调用parseExp，将它右边的表达式节点解析出来，作为自己的body。（注意它根本不关心自己左边的表达式是什么）
+它会递归调用parseExp，将它右边的表达式节点解析出来，作为自己的body。
+> 注意，它完全不关心自己左边的表达式是什么，这是prefix的根本特征。
 
 在这里，递归调用`parseExp(150)`传递的参数150，可以理解成**它与右边子表达式的绑定强度**。举个例子，在解析`-1+2`的时候，prefix `-` 调用`parseExp(150)`得到的body是`1`，而不是`1+2`，这就要归功于150这个参数。优先级的具体机理在后面还会讲述。
 
-#### 11~19行
+#### 11~19行：解析infix
 
 得到了prefix的表达式节点以后，我们就进入了一个while循环，这个循环负责解析出后续的infix操作。比如`-1 + 2 + 3 + 4`，后面3个加号都会在这个循环中解析出来。
 
-它先从token流**瞥见**一个token，作为infix，找到它对应的表达式构建器（infixParselet），调用它，得到新的表达式节点。注意，**调用infixParselet时传入了`left`**，因为infix需要它左边的表达式节点才能构建自己**。
+它先从token流**瞥见**一个token，作为infix，找到它对应的表达式构建器（infixParselet），调用`infixParselet.handle`，得到新的表达式节点。注意，**调用infixParselet时传入了当前的`left`**，因为infix需要它左边的表达式节点才能构建自己。新的表达式节点又会赋值给`left`。`left`不断累积，变成更大的节点树。
 
 比如，`-`的infixParselet是这样注册的：
 
@@ -181,7 +183,7 @@ infixParselets["-"] = {
 第三个判断`if (infixParselet.precedence <= ctxPrecedence) break;`是整个算法的核心，前面提到的parseExp的参数`ctxPrecedence`，就是为这一行而存在的。它的作用是，**限制本次parseExp调用只能解析优先级大于`ctxPrecedence`的infix操作符**。如果遇到的infix优先级小于等于`ctxPrecedence`，则停止解析，将当前解析结果返回给调用者，让调用者来处理后续token。**初始时`ctxPrecedence`的值为0**，表示要解析完所有操作，直到遇到结尾（或遇到不认识的操作符）。
 
 比如，在前面`-1+2`的例子中，前缀`-`的prefixParselet递归调用了`parseExp(150)`，在递归的parseExp执行中，`ctxPrecedence`为150，大于 `+`infix的优先级 `120`，因此这个递归调用遇到`+`的时候就结束了，使得前缀`-`与`1`绑定，而不是与`1+2`绑定。这样，才能得到正确的结果`(-(1))+2`。
-> 在infixParselet递归调用parseExp的时候，也是同样的道理。
+> 在infixParselet递归调用parseExp的时候，也同样传入了这个参数。
 
 你可以将prefixParselet和infixParselet递归调用parseExp的行为，理解成**用一个“磁铁”来吸引后续的token，递归参数`ctxPrecedence`就表示这个磁铁的“吸力”**。仅仅当后续infix与它左边的token结合的足够紧密（infixParselet.precedence足够大）时，这个infix才会一起被“吸”过来。否则，这个infix会与它左边的token“分离”，它左边的token会参与本次parseExp构建表达式节点的过程，而这个infix不会参与。
 
@@ -195,6 +197,8 @@ infixParselets["-"] = {
     - infixParselet**递归调用parseExp**，解析自己需要的部分，构建表达式节点
   - 得到新的`left`
 - `return left`
+
+现在，你应该能够理解前面所说的“你在从左到右读取输入字符串的时候，你是可以立即判断出你遇到的`-`应该当作prefix还是infix的，不用担心混淆 （比如`-1-2`）”，因为在读取下一个token之前，算法就已经很清楚接下来的token应该**作为**prefix还是infix！
 
 #### 示例的执行过程
 
@@ -263,6 +267,6 @@ function helpCreateInfixOperator(
 
 ## 参考资料
 
-- [https://engineering.desmos.com/articles/pratt-parser/](https://engineering.desmos.com/articles/pratt-parser/)
-- [http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/](http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/)
-- [https://youtu.be/Nlqv6NtBXcA?t=1257](https://youtu.be/Nlqv6NtBXcA?t=1257)
+- [How Desmos uses Pratt Parsers](https://engineering.desmos.com/articles/pratt-parser/) 这篇文章引导读者从零开始推导出Pratt算法，并给出了他们选择Pratt Parsing时的权衡。
+- [Pratt Parsers: Expression Parsing Made Easy](http://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/) 也是一篇很不错的介绍文章，将读者带入Pratt算法的推导过程。
+- [Arrow functions break JavaScript parsers](https://dev.to/samthor/arrow-functions-break-javascript-parsers-1ldp) 带领我们思考一个很有意思的问题：JavaScript的箭头函数`(arg1=...)=>{...}`是如何解析的？可能比你想象中的要难！
