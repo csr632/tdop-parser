@@ -91,6 +91,12 @@ describe("parenthesis", () => {
     expect(res).toMatchSnapshot();
   });
 
+  test("(-1 + 2) * 3 - -4", () => {
+    const parser = createParser(createScanner("(-1 + 2) * 3 - -4"));
+    const res = parser.parseProgram();
+    expect(res).toMatchSnapshot();
+  });
+
   test("((1))+1", () => {
     const parser = createParser(createScanner("((1))+1"));
     const res = parser.parseProgram();

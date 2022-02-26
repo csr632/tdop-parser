@@ -442,6 +442,45 @@ exports[`parenthesis > ((1))+1 1`] = `
 }
 `;
 
+exports[`parenthesis > (-1 + 2) * 3 - -4 1`] = `
+{
+  "left": {
+    "left": {
+      "left": {
+        "operator": "-",
+        "right": {
+          "type": "value",
+          "value": "1",
+        },
+        "type": "unary",
+      },
+      "operator": "+",
+      "right": {
+        "type": "value",
+        "value": "2",
+      },
+      "type": "binary",
+    },
+    "operator": "*",
+    "right": {
+      "type": "value",
+      "value": "3",
+    },
+    "type": "binary",
+  },
+  "operator": "-",
+  "right": {
+    "operator": "-",
+    "right": {
+      "type": "value",
+      "value": "4",
+    },
+    "type": "unary",
+  },
+  "type": "binary",
+}
+`;
+
 exports[`parenthesis > 2*(3-1) 1`] = `
 {
   "left": {
