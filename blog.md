@@ -224,7 +224,7 @@ infixParselets["-"] = {
   - 继续while循环，瞥见`-`，找到它的infixParselet，优先级为120，大于ctxPrecedence。因此这个infix也一起被“吸走”
   - **吃**掉`-`，调用`-`的infixParselet.handle，此时`left`为`1+(2*3)`
   - 与之前同理，`-`的 infixParselet.handle的返回结果为`(1+(2*3))-4`（将`parser.parseExp`的返回值与`left`拼起来），赋值给`left`
-  - while循环继续，但是发现后面没有token，因此退出while循环，返回`left`​
+  - while循环继续，但是发现后面没有token，因此退出while循环，返回`left`
 - `parseExp(0)`返回`(1+(2*3))-4`
 
 #### 如何处理结合性
