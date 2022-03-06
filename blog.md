@@ -36,9 +36,9 @@ primary ::= '(' expression ')' | NUMBER | VARIABLE | '-' primary
 
 手工实现Parser的常见方法是**[递归下降算法](https://en.wikipedia.org/wiki/Recursive_descent_parser)** 。递归下降算法比较擅长解析的是**[语句(Statement)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements)** ，因为创造者在设计语句的时候，有意地将语句类型的标识放在最开头，比如`if (expression) ...`、`while (expression) ...`。得益于此，Parser通过开头来识别出语句类型以后，就知道需要依次解析哪些结构了，依次调用对应的结构解析函数即可，实现非常简单。
 
-但是，递归下降算法在处理**[表达式(Expression)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators)** 的时候非常**吃力**，因为Parser在读到表达式开头的时候，无法知道正在解析哪种表达式，因为操作符(Operator)往往在表达式的中间位置（甚至结尾），比如加法运算的`+`、函数调用的`()`。并且，你需要为每一种**操作符优先级(precedence)**都单独编写一个解析函数，并手动处理**结合性(associativity)**，因此解析函数会比较多、比较复杂。
+但是，由于**递归下降算法需要自顶向下地理解代码结构**，因此它在处理**[表达式(Expression)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators)** 的时候非常**吃力**。Parser在读到表达式开头的时候，无法知道自己身处哪种表达式之中，这是因为操作符(Operator)往往在表达式的中间位置（甚至结尾），比如加法运算的`+`、函数调用的`()`。为了能自顶向下地解析表达式，你需要将每一种**操作符优先级(precedence)**都单独作为一个层级，为其编写解析函数，并手动处理**结合性(associativity)**，因此解析函数会比较多、比较复杂。
 
-比如在[wikipedia的例子](https://en.wikipedia.org/wiki/Recursive_descent_parser#C_implementation)中，`expression`负责处理加减法、`term`负责处理乘除法，并且前者调用后者。可以想象有更多优先级时，代码会更加复杂，递归调用层级会更深。比如，即使输入字符串是简单的`1`，这个解析器也需要递归地调用以下解析函数：`program -> block -> statement -> expression -> term -> factor` 。后面2层调用本应该避免，因为输入根本不包含加减乘除法！
+比如在[wikipedia的例子](https://en.wikipedia.org/wiki/Recursive_descent_parser#C_implementation)中，`expression`负责处理加减法、`term`负责处理乘除法，并且前者调用后者（乘除法项处于更低的层级）。可以想象有更多优先级时，代码会更加复杂，递归调用层级会更深。比如，即使输入字符串是简单的`1`，这个解析器也需要递归地调用以下解析函数：`program -> block -> statement -> expression -> term -> factor` 。后面2层调用本应该避免，因为输入根本不包含加减乘除法！
 
 因此，在手工实现Parser的时候，一般会**将表达式的解析交给其它算法**，规避递归下降的劣势。Pratt Parsing就是这样一种擅长解析表达式的算法。
 
