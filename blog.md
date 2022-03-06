@@ -187,18 +187,25 @@ infixParselets["-"] = {
 
 你可以将prefixParselet和infixParselet递归调用parseExp的行为，理解成**用一个“磁铁”来吸引后续的token，递归参数`ctxPrecedence`就表示这个磁铁的“吸力”**。仅仅当后续infix与它左边的token结合的足够紧密（infixParselet.precedence足够大）时，这个infix才会一起被“吸”过来。否则，这个infix会与它左边的token“分离”，它左边的token会参与本次parseExp构建表达式节点的过程，而这个infix不会参与。
 
+### 算法总结
+
 综上所述，**Pratt Parsing是一种循环与递归相结合的算法**。`parseExp`的执行结构大概是这样：
 
 - 吃一个token作为prefix，调用它的prefixParselet，得到`left`（已经构建好的表达式节点）
   - prefixParselet**递归调用parseExp**，解析自己需要的部分，构建表达式节点
 - **while循环**
-  - 瞥一眼token作为infix，如果它的优先级足够高，才能继续处理。否则函数`return left`
+  - 瞥一眼token作为infix，仅当它的优先级足够高，才能继续处理。否则跳出循环
   - 吃掉infix token，调用它的infixParselet，将`left`传给它
     - infixParselet**递归调用parseExp**，解析自己需要的部分，构建表达式节点
   - 得到新的`left`
 - `return left`
 
 现在，你应该能够理解前面所说的“你在从左到右读取输入字符串的时候，你是可以立即判断出你遇到的`-`应该当作prefix还是infix的，不用担心混淆 （比如`-1-2`）”，因为在读取下一个token之前，算法就已经很清楚接下来的token应该**作为**prefix还是infix！
+
+
+Pratt Parsing的精妙之处在于，在看到最开头的原子表达式以后，就可以直接构建出它对应的节点，不需要知道它如何身处于更高层的表达式结构中。如果扫描到后面发现，左边的表达式属于某个infix，再就将它交给infix的处理函数，构建出更高层级的表达式。也就是说，Pratt Parsing从表达式树的叶子节点开始构建，然后根据后续扫描的结果，将它放置在合适的上下文（更高层的表达式结构）中。
+> 与之形成对比的是递归下降算法，它需要自顶向下地理解表达式结构。比如前面给出的例子：`program -> block -> statement -> expression -> term -> factor`。
+
 
 #### 示例的执行过程
 
