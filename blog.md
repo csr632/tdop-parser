@@ -191,11 +191,11 @@ infixParselets["-"] = {
 
 综上所述，**Pratt Parsing是一种循环与递归相结合的算法**。`parseExp`的执行结构大概是这样：
 
-- 吃一个token作为prefix，调用它的prefixParselet，得到`left`（已经构建好的表达式节点）
+- 吃一个token作为prefix，调用**这种token对应的prefixParselet**，得到`left`（已经构建好的表达式节点）
   - prefixParselet**递归调用parseExp**，解析自己需要的部分，构建表达式节点
 - **while循环**
   - 瞥一眼token作为infix，仅当它的优先级足够高，才能继续处理。否则跳出循环
-  - 吃掉infix token，调用它的infixParselet，将`left`传给它
+  - 吃掉infix token，调用**这种token对应的infixParselet**，将`left`传给它
     - infixParselet**递归调用parseExp**，解析自己需要的部分，构建表达式节点
   - 得到新的`left`
 - `return left`
